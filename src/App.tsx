@@ -1,4 +1,4 @@
-import { useState, useEffect, ChangeEvent, DragEvent } from 'react';
+import { useState, useEffect, ChangeEvent, DragEvent, ReactNode } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   Phone,
@@ -48,6 +48,93 @@ import {
 import logoSigCareAuto from "./assets/logo-sig-care-auto.png";
 import reboque1 from "./assets/reboque1.jpeg";
 import reboque2 from "./assets/reboque2.jpeg";
+
+// Custom Scroll Animation Section to apply dynamic blur to above/below sections
+function ScrollAnimateSection({ 
+  children, 
+  id, 
+  className = "",
+  as = "section"
+}: { 
+  children: ReactNode; 
+  id?: string; 
+  className?: string; 
+  as?: "section" | "footer";
+}) {
+  const Component = as === "footer" ? motion.footer : motion.section;
+  return (
+    <Component
+      id={id}
+      className={className}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: false, amount: 0.12 }}
+      variants={{
+        hidden: { 
+          opacity: 0.25, 
+          filter: "blur(8px)",
+          scale: 0.98,
+          transition: {
+            duration: 0.5,
+            ease: "easeInOut"
+          }
+        },
+        visible: {
+          opacity: 1,
+          filter: "blur(0px)",
+          scale: 1,
+          transition: {
+            duration: 0.8,
+            ease: [0.16, 1, 0.3, 1],
+            staggerChildren: 0.12
+          }
+        }
+      }}
+    >
+      {children}
+    </Component>
+  );
+}
+
+// Child animation variants for staggered entrances within sections
+const itemFadeUpVariants = {
+  hidden: { opacity: 0, y: 35 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { 
+      type: "spring", 
+      stiffness: 80, 
+      damping: 16 
+    } 
+  }
+};
+
+const itemSlideLeftVariants = {
+  hidden: { opacity: 0, x: -40 },
+  visible: { 
+    opacity: 1, 
+    x: 0,
+    transition: { 
+      type: "spring", 
+      stiffness: 80, 
+      damping: 16 
+    } 
+  }
+};
+
+const itemSlideRightVariants = {
+  hidden: { opacity: 0, x: 40 },
+  visible: { 
+    opacity: 1, 
+    x: 0,
+    transition: { 
+      type: "spring", 
+      stiffness: 80, 
+      damping: 16 
+    } 
+  }
+};
 
 export default function App() {
   // Active reboque image index for the slideshow
@@ -441,11 +528,11 @@ export default function App() {
       </header>
 
       {/* HERO SECTION / PRIMEIRA DOBRA */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-brand-cold-gray via-white to-white pt-16 pb-24 md:py-32 font-sans border-b border-gray-100">
+      <ScrollAnimateSection className="relative overflow-hidden bg-gradient-to-b from-brand-cold-gray via-white to-white pt-16 pb-24 md:py-32 font-sans border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-6 relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           
           {/* Hero Left Content */}
-          <div className="lg:col-span-7 space-y-6">
+          <motion.div variants={itemSlideLeftVariants} className="lg:col-span-7 space-y-6">
             <div className="inline-flex items-center gap-2 bg-brand-corp/5 border border-brand-corp/10 rounded-full px-4 py-1.5">
               <span className="h-2 w-2 rounded-full bg-brand-electric animate-pulse" />
               <span className="text-xs font-bold uppercase tracking-wider text-brand-corp">{heroSection.eyebrow}</span>
@@ -495,10 +582,10 @@ export default function App() {
                 </div>
               ))}
             </div>
-          </div>
+          </motion.div>
 
           {/* Hero Right Visual Column - Full Image Slideshow Container */}
-          <div className="lg:col-span-5 flex items-center justify-center">
+          <motion.div variants={itemSlideRightVariants} className="lg:col-span-5 flex items-center justify-center">
             <div className="relative bg-white border border-gray-100 rounded-3xl p-4 shadow-2xl w-full h-[450px]">
               {/* Slideshow of Towing / Reboque Images taking the whole space of the card */}
               <div className="relative w-full h-full overflow-hidden rounded-2xl bg-gray-50 flex items-center justify-center">
@@ -528,15 +615,15 @@ export default function App() {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
-      </section>
+      </ScrollAnimateSection>
 
       {/* IMPORTANT CLARIFICATION BANNER - POSITIONING SIG AS OPERATIONS AND NOT AN AUTO SHOP */}
-      <section className="bg-brand-navy text-white py-12 relative overflow-hidden">
+      <ScrollAnimateSection className="bg-brand-navy text-white py-12 relative overflow-hidden">
         <div className="absolute inset-0 bg-brand-corp/30 opacity-50" />
         <div className="max-w-5xl mx-auto px-6 relative z-10">
-          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 sm:p-8 border border-white/15 flex flex-col md:flex-row items-start md:items-center gap-6">
+          <motion.div variants={itemFadeUpVariants} className="bg-white/10 backdrop-blur-md rounded-2xl p-6 sm:p-8 border border-white/15 flex flex-col md:flex-row items-start md:items-center gap-6">
             <div className="p-4 bg-brand-electric/20 text-brand-electric rounded-xl flex-shrink-0 animate-pulse">
               <Info className="w-8 h-8 stroke-[2.5]" />
             </div>
@@ -547,13 +634,13 @@ export default function App() {
                 Somos um <strong>serviço independente de gestão operacional e concierge automóvel</strong>. Nós defendemos os teus interesses: coordenamos oficinas certificadas, gerimos o procurement de peças originais, auditamos orçamentos de fornecedores e gerimos todo o processo administrativo e logístico em teu nome. A nossa lealdade é exclusivamente contigo.
               </p>
             </div>
-          </div>
+          </motion.div>
         </div>
-      </section>
+      </ScrollAnimateSection>
 
       {/* 02 DORES - "Já passou por alguma destas situações?" */}
-      <section id="dores" className="py-24 bg-brand-cold-gray space-y-16 font-sans">
-        <div className="max-w-4xl mx-auto px-6 text-center space-y-4">
+      <ScrollAnimateSection id="dores" className="py-24 bg-brand-cold-gray space-y-16 font-sans">
+        <motion.div variants={itemFadeUpVariants} className="max-w-4xl mx-auto px-6 text-center space-y-4">
           <span className="text-xs font-extrabold uppercase tracking-widest text-brand-electric font-mono">RECONHECES-TE AQUI?</span>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-brand-navy tracking-tight">
             {doresSection.title}
@@ -561,12 +648,13 @@ export default function App() {
           <p className="text-lg text-brand-slate max-w-2xl mx-auto leading-relaxed">
             {doresSection.subtitle}
           </p>
-        </div>
+        </motion.div>
 
         <div className="max-w-5xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {doresSection.items.map((dor, i) => (
-            <div 
+            <motion.div 
               key={dor.id}
+              variants={itemFadeUpVariants}
               className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col justify-between group"
             >
               <div className="space-y-4">
@@ -591,19 +679,19 @@ export default function App() {
                   <span>{dor.footerText}</span>
                 </div>
               )}
-            </div>
+            </motion.div>
           ))}
 
 
         </div>
-      </section>
+      </ScrollAnimateSection>
 
       {/* 03 SOLUÇÃO - "Foca-te no que só tu podes fazer" */}
-      <section 
+      <ScrollAnimateSection 
         id="solucao" 
         className="py-24 bg-white font-sans border-b border-gray-100"
       >
-        <div className="max-w-4xl mx-auto px-6 text-center space-y-4 mb-16">
+        <motion.div variants={itemFadeUpVariants} className="max-w-4xl mx-auto px-6 text-center space-y-4 mb-16">
           <span className="text-xs font-extrabold uppercase tracking-widest text-brand-electric font-mono">OS NOSSOS PILARES</span>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-brand-navy tracking-tight">
             {solucaoSection.title}
@@ -611,12 +699,12 @@ export default function App() {
           <p className="text-lg text-brand-slate max-w-2xl mx-auto leading-relaxed">
             {solucaoSection.subtitle}
           </p>
-        </div>
+        </motion.div>
 
         {/* Content of Solucoes Section (Quote + Pillars) */}
         <div className="block">
           {/* Corporate Quote block */}
-          <div className="max-w-4xl mx-auto px-6 mb-20">
+          <motion.div variants={itemFadeUpVariants} className="max-w-4xl mx-auto px-6 mb-20">
             <div className="relative bg-brand-cold-gray/70 border border-gray-200 rounded-3xl p-8 sm:p-12 text-center shadow-md">
               <span className="absolute top-4 left-6 text-7xl text-brand-electric/15 font-serif select-none pointer-events-none">“</span>
               <p className="text-lg sm:text-xl font-medium text-brand-navy leading-relaxed relative z-10 italic">
@@ -628,14 +716,14 @@ export default function App() {
                 <div className="h-0.5 w-6 bg-brand-electric" />
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Solution Pillars Blocks Grid */}
           <div className="max-w-7xl mx-auto px-6 space-y-8">
-            <div className="text-center">
+            <motion.div variants={itemFadeUpVariants} className="text-center">
               <h3 className="text-2xl font-bold text-brand-navy mb-2">Os Quatro Pilares Operacionais da SIG</h3>
               <p className="text-sm text-brand-slate">Garantimos supervisão constante e rastreabilidade processual</p>
-            </div>
+            </motion.div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {solucaoSection.pilares.map((pilar, index) => {
@@ -644,8 +732,9 @@ export default function App() {
                 const PilarIcon = icons[index % icons.length];
 
                 return (
-                  <div 
+                  <motion.div 
                     key={pilar.id}
+                    variants={itemFadeUpVariants}
                     className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col justify-between"
                   >
                     <div className="space-y-4">
@@ -663,17 +752,17 @@ export default function App() {
                       <span>{pilar.footerText || "PILAR ESTÁVEL"}</span>
                       <span className="text-brand-electric font-mono">0{index + 1}</span>
                     </div>
-                  </div>
+                  </motion.div>
                 );
               })}
             </div>
           </div>
         </div>
-      </section>
+      </ScrollAnimateSection>
 
       {/* 04 COMO FUNCIONA - 4 PASSO PROGRESSÃO VISUAL */}
-      <section id="ComoFunciona" className="py-24 bg-brand-cold-gray/40 font-sans border-b border-gray-100">
-        <div className="max-w-4xl mx-auto px-6 text-center space-y-4 mb-20">
+      <ScrollAnimateSection id="ComoFunciona" className="py-24 bg-brand-cold-gray/40 font-sans border-b border-gray-100">
+        <motion.div variants={itemFadeUpVariants} className="max-w-4xl mx-auto px-6 text-center space-y-4 mb-20">
           <span className="text-xs font-extrabold uppercase tracking-widest text-brand-electric font-mono">O PROCESSO</span>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-brand-navy tracking-tight">
             {comoFuncionaSection.title}
@@ -681,14 +770,17 @@ export default function App() {
           <p className="text-lg text-brand-slate max-w-2xl mx-auto leading-relaxed">
             {comoFuncionaSection.subtitle}
           </p>
-        </div>
+        </motion.div>
 
         {/* Technical Process Timelines cards */}
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative">
             {comoFuncionaSection.steps.map((p, i) => (
-              <div key={p.step} className="relative bg-white border border-gray-200 rounded-2xl p-6 shadow-md transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:border-brand-electric group">
-                
+              <motion.div 
+                key={p.step} 
+                variants={itemFadeUpVariants}
+                className="relative bg-white border border-gray-200 rounded-2xl p-6 shadow-md transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:border-brand-electric group"
+              >
                 {/* Visual Step Number Badge */}
                 <div className="absolute -top-5 left-6 bg-brand-electric text-white font-mono font-bold text-sm tracking-widest rounded-full h-10 w-10 flex items-center justify-center shadow-lg shadow-brand-electric/25">
                   0{p.step}
@@ -703,23 +795,23 @@ export default function App() {
                 <div className="pt-4 border-t border-gray-50 mt-4 flex items-center justify-end text-[10px] uppercase font-bold tracking-widest text-brand-corp">
                   <span className="h-2 w-2 rounded-full bg-brand-success" />
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
 
           {/* Quick Info Box beneath working */}
-          <div className="max-w-3xl mx-auto mt-12 bg-white border border-gray-200/60 p-4 rounded-xl flex items-center gap-3 shadow-sm justify-center">
+          <motion.div variants={itemFadeUpVariants} className="max-w-3xl mx-auto mt-12 bg-white border border-gray-200/60 p-4 rounded-xl flex items-center gap-3 shadow-sm justify-center">
             <Info className="w-5 h-5 text-brand-electric flex-shrink-0" />
             <p className="text-xs font-medium text-brand-slate">
               Não tomas decisões às cegas. Cada relatório, cotação e avanço é comunicado via WhatsApp ou Email corporativo.
             </p>
-          </div>
+          </motion.div>
         </div>
-      </section>
+      </ScrollAnimateSection>
 
       {/* 05 PARA QUEM - PERFIS DE CLIENTES */}
-      <section id="paraQuem" className="py-24 bg-white font-sans border-b border-gray-100">
-        <div className="max-w-4xl mx-auto px-6 text-center space-y-4 mb-16">
+      <ScrollAnimateSection id="paraQuem" className="py-24 bg-white font-sans border-b border-gray-100">
+        <motion.div variants={itemFadeUpVariants} className="max-w-4xl mx-auto px-6 text-center space-y-4 mb-16">
           <span className="text-xs font-extrabold uppercase tracking-widest text-brand-electric font-mono">PÚBLICO-ALVO</span>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-brand-navy tracking-tight">
             {paraQuemSection.title}
@@ -727,13 +819,14 @@ export default function App() {
           <p className="text-lg text-brand-slate max-w-2xl mx-auto leading-relaxed">
             {paraQuemSection.subtitle}
           </p>
-        </div>
+        </motion.div>
 
         {/* 4 Segmented customer profile cards */}
         <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-8">
           {paraQuemSection.perfis.map((perfil) => (
-            <button 
+            <motion.button 
               key={perfil.id}
+              variants={itemFadeUpVariants}
               onClick={() => handleProfileClick(perfil.title)}
               className={`text-left border rounded-3xl p-8 shadow-sm transition-all duration-300 relative overflow-hidden flex flex-col justify-between cursor-pointer w-full group ${
                 perfil.isMain 
@@ -771,14 +864,14 @@ export default function App() {
                   <ChevronRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
                 </span>
               </div>
-            </button>
+            </motion.button>
           ))}
         </div>
-      </section>
+      </ScrollAnimateSection>
 
       {/* 07 PORQUÊ A SIG - DIFERENCIAIS */}
-      <section id="diferenciais" className="py-24 bg-white font-sans border-b border-gray-100">
-        <div className="max-w-4xl mx-auto px-6 text-center space-y-4 mb-16">
+      <ScrollAnimateSection id="diferenciais" className="py-24 bg-white font-sans border-b border-gray-100">
+        <motion.div variants={itemFadeUpVariants} className="max-w-4xl mx-auto px-6 text-center space-y-4 mb-16">
           <span className="text-xs font-extrabold uppercase tracking-widest text-brand-electric font-mono">DIFERENCIAL</span>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-brand-navy tracking-tight">
             {diferenciaisSection.title}
@@ -786,12 +879,16 @@ export default function App() {
           <p className="text-lg text-brand-slate max-w-2xl mx-auto leading-relaxed">
             {diferenciaisSection.subtitle}
           </p>
-        </div>
+        </motion.div>
 
         {/* 6 differentiators container */}
         <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {diferenciaisSection.items.map((dif, idx) => (
-            <div key={dif.id} className="relative bg-brand-cold-gray border border-gray-200 p-6 rounded-2xl flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:border-brand-electric hover:bg-white group">
+            <motion.div 
+              key={dif.id} 
+              variants={itemFadeUpVariants}
+              className="relative bg-brand-cold-gray border border-gray-200 p-6 rounded-2xl flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:border-brand-electric hover:bg-white group"
+            >
               <div className="space-y-4">
                 <div className="h-10 w-10 bg-brand-navy/5 text-brand-electric rounded-xl flex items-center justify-center font-bold text-sm">
                   D0{idx + 1}
@@ -803,29 +900,29 @@ export default function App() {
               <div className="mt-6 pt-3 border-t border-gray-200/60 text-[9px] font-mono tracking-widest uppercase text-brand-slate block">
                 VALOR GARANTIDO
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
-      </section>
+      </ScrollAnimateSection>
 
       {/* 08 FORM ONBOARDING - "Inicie a Gestão do seu Carro em 1 Minuto" */}
-      <section id="form-onboarding" className="py-24 bg-brand-navy text-white relative overflow-hidden font-sans border-b border-brand-corp/30">
+      <ScrollAnimateSection id="form-onboarding" className="py-24 bg-brand-navy text-white relative overflow-hidden font-sans border-b border-brand-corp/30">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(0,102,255,0.1),transparent_50%)]" />
         
         <div className="max-w-5xl mx-auto px-6 relative z-10 space-y-12 animate-fade-in">
           
           {/* Header */}
-          <div className="text-center space-y-4">
+          <motion.div variants={itemFadeUpVariants} className="text-center space-y-4">
             <h2 className="text-3.5xl sm:text-4.5xl font-extrabold tracking-tight">
               Inicie a Gestão do seu Carro em 1 Minuto
             </h2>
             <p className="text-sm text-gray-300 max-w-2xl mx-auto leading-relaxed">
               Responda às perguntas rápidas e o nosso Gestor dedicado entrará em contacto com uma auditoria e proposta sob medida para si ou para a sua frota.
             </p>
-          </div>
+          </motion.div>
 
           {!isFormSubmitted ? (
-            <div className="bg-brand-dark-navy/95 border border-brand-corp/50 rounded-3xl p-6 sm:p-10 shadow-2xl space-y-8 backdrop-blur-md">
+            <motion.div variants={itemFadeUpVariants} className="bg-brand-dark-navy/95 border border-brand-corp/50 rounded-3xl p-6 sm:p-10 shadow-2xl space-y-8 backdrop-blur-md">
               
               {/* PROGRESS BAR WITH STEP INDICATORS */}
               <div className="space-y-4">
@@ -1483,7 +1580,7 @@ export default function App() {
                 )}
               </div>
 
-            </div>
+            </motion.div>
           ) : (
             /* SUBMIT SUCCESS PAGE */
             <div className="bg-brand-dark-navy border border-brand-success/30 rounded-3xl p-8 sm:p-12 text-center max-w-2xl mx-auto space-y-6 shadow-2xl animate-fade-in relative">
@@ -1535,14 +1632,14 @@ export default function App() {
           )}
 
         </div>
-      </section>
+      </ScrollAnimateSection>
 
       {/* 09 CTA FINAL - CHAMADA À ACÇÃO */}
-      <section className="py-24 bg-brand-navy text-white relative overflow-hidden font-sans">
+      <ScrollAnimateSection className="py-24 bg-brand-navy text-white relative overflow-hidden font-sans">
         {/* Abstract dark graphics */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,rgba(0,102,255,0.15),transparent_60%)]" />
         
-        <div className="max-w-4xl mx-auto px-6 relative z-10 text-center space-y-8">
+        <motion.div variants={itemFadeUpVariants} className="max-w-4xl mx-auto px-6 relative z-10 text-center space-y-8">
           
           <div className="inline-flex items-center gap-2 bg-brand-electric/10 border border-brand-electric/25 rounded-full px-4 py-1.5 text-brand-electric">
             <Sparkles className="w-4 h-4 animate-pulse" />
@@ -1582,11 +1679,11 @@ export default function App() {
             <span className="inline-block h-2 w-2 rounded-full bg-brand-success animate-pulse" />
             <span>{ctaSection.reassurance}</span>
           </div>
-        </div>
-      </section>
+        </motion.div>
+      </ScrollAnimateSection>
 
       {/* 09 RODAPÉ CORPORATIVO */}
-      <footer className="bg-brand-dark-navy text-white py-16 font-sans border-t border-brand-corp/30">
+      <ScrollAnimateSection as="footer" className="bg-brand-dark-navy text-white py-16 font-sans border-t border-brand-corp/30">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-12">
           
           {/* Logo brand descriptions */}
@@ -1692,7 +1789,7 @@ export default function App() {
             </button>
           </div>
         </div>
-      </footer>
+      </ScrollAnimateSection>
 
       {/* Floating WhatsApp button - Mobile & Tablet only, hidden on Desktop */}
       <a
