@@ -1,0 +1,6 @@
+{
+  "name": "SIG Care Auto",
+  "description": "Serviço profissional de gestão operacional e concierge automóvel em Maputo e Matola por SIG SA.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
