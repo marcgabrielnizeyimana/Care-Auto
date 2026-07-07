@@ -48,6 +48,8 @@ import {
 import logoSigCareAuto from "./assets/logo-sig-care-auto.png";
 import reboque1 from "./assets/reboque1.jpeg";
 import reboque2 from "./assets/reboque2.jpeg";
+import reboque3 from "./assets/reboque3.jpeg";
+import reboque4 from "./assets/reboque4.jpeg";
 
 // Custom Scroll Animation Section to apply dynamic blur to above/below sections
 function ScrollAnimateSection({ 
@@ -136,14 +138,15 @@ const itemSlideRightVariants = {
   }
 };
 
+const reboqueImages = [reboque1, reboque2, reboque3, reboque4];
+
 export default function App() {
   // Active reboque image index for the slideshow
   const [activeImageIndex, setActiveImageIndex] = useState(0);
-  const reboqueImages = [reboque1, reboque2];
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setActiveImageIndex((prev) => (prev === 0 ? 1 : 0));
+      setActiveImageIndex((prev) => (prev + 1) % reboqueImages.length);
     }, 7000);
     return () => clearInterval(interval);
   }, []);
@@ -586,9 +589,9 @@ export default function App() {
 
           {/* Hero Right Visual Column - Full Image Slideshow Container */}
           <motion.div variants={itemSlideRightVariants} className="lg:col-span-5 flex items-center justify-center">
-            <div className="relative bg-white border border-gray-100 rounded-3xl p-4 shadow-2xl w-full h-[450px]">
+            <div className="relative bg-white border border-gray-100 rounded-3xl p-1 shadow-2xl w-full h-[450px]">
               {/* Slideshow of Towing / Reboque Images taking the whole space of the card */}
-              <div className="relative w-full h-full overflow-hidden rounded-2xl bg-gray-50 flex items-center justify-center">
+              <div className="relative w-full h-full overflow-hidden rounded-[20px] bg-gray-50 flex items-center justify-center">
                 <AnimatePresence mode="wait">
                   <motion.img
                     key={activeImageIndex}
@@ -598,20 +601,18 @@ export default function App() {
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 1.02 }}
                     transition={{ duration: 0.8, ease: "easeInOut" }}
-                    className="absolute inset-0 w-full h-full object-cover rounded-2xl"
+                    className="absolute inset-0 w-full h-full object-cover rounded-[20px]"
                   />
                 </AnimatePresence>
 
                 {/* Subtle Dots Indicator */}
                 <div className="absolute bottom-4 right-4 flex gap-1.5 bg-brand-navy/60 backdrop-blur-md px-3 py-2 rounded-full z-10 border border-white/10">
-                  <div className={`h-1.5 rounded-full transition-all duration-300 ${activeImageIndex === 0 ? 'bg-brand-electric w-4' : 'bg-white/50 w-1.5'}`} />
-                  <div className={`h-1.5 rounded-full transition-all duration-300 ${activeImageIndex === 1 ? 'bg-brand-electric w-4' : 'bg-white/50 w-1.5'}`} />
-                </div>
-
-                {/* Operational tag overlay */}
-                <div className="absolute top-4 left-4 bg-brand-navy/90 text-white text-[10px] font-bold tracking-widest uppercase px-3 py-2 rounded-lg shadow-sm z-10 flex items-center gap-2 border border-white/10">
-                  <span className="h-2 w-2 rounded-full bg-brand-electric animate-pulse" />
-                  Operação Ativa
+                  {reboqueImages.map((_, i) => (
+                    <div 
+                      key={i}
+                      className={`h-1.5 rounded-full transition-all duration-300 ${activeImageIndex === i ? 'bg-brand-electric w-4' : 'bg-white/50 w-1.5'}`} 
+                    />
+                  ))}
                 </div>
               </div>
             </div>
