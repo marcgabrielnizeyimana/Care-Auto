@@ -50,6 +50,7 @@ import reboque1 from "./assets/reboque1.jpeg";
 import reboque2 from "./assets/reboque2.jpeg";
 import reboque3 from "./assets/reboque3.jpeg";
 import reboque4 from "./assets/reboque4.jpeg";
+import reboque5 from "./assets/reboque5.jpeg";
 
 // Custom Scroll Animation Section to apply dynamic blur to above/below sections
 function ScrollAnimateSection({ 
@@ -138,7 +139,7 @@ const itemSlideRightVariants = {
   }
 };
 
-const reboqueImages = [reboque1, reboque2, reboque3, reboque4];
+const reboqueImages = [reboque5, reboque1, reboque2, reboque3, reboque4];
 
 export default function App() {
   // Active reboque image index for the slideshow
