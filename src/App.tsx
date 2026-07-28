@@ -1709,7 +1709,7 @@ export default function App() {
             {/* Social Media Links with Official Brand Colors */}
             <div className="flex items-center gap-3 pt-2">
               <a 
-                href="https://www.instagram.com/sig.oficial0?igsh=ZTV6NWo3MDd0NDZz" 
+                href="https://www.instagram.com/careauto_sig?igsh=MXN2ZmI5c2Q3OXUxNg==" 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 title="Instagram (SIG Care Auto)"
@@ -1718,7 +1718,7 @@ export default function App() {
                 <Instagram className="w-5 h-5" />
               </a>
               <a 
-                href="https://www.facebook.com/profile.php?id=61590807086338" 
+                href="https://www.facebook.com/profile.php?id=61591109065521" 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 title="Facebook (SIG Care Auto)"
@@ -1746,7 +1746,7 @@ export default function App() {
                 <Phone className="w-4 h-4 text-brand-electric flex-shrink-0 mt-0.5" />
                 <div className="space-y-0.5">
                   {rodapeSection.details.telephones.map((t, idx) => (
-                    <span key={idx} className="block font-mono">{t}</span>
+                    <a key={idx} href={`tel:${t.replace(/\s+/g, '')}`} className="block font-mono hover:text-brand-electric transition-colors hover:underline">{t}</a>
                   ))}
                 </div>
               </li>
@@ -1953,7 +1953,7 @@ export default function App() {
                         <strong>SIG Care Auto</strong><br />
                         Email: <a href="mailto:careauto@opssig.com" className="text-brand-electric font-semibold hover:underline">careauto@opssig.com</a><br />
                         Website: <a href="http://www.opssig.com" target="_blank" rel="noopener noreferrer" className="text-brand-electric font-semibold hover:underline">www.sigmz.com</a><br />
-                        Telefone: +258878798922
+                        Telefone: <a href="tel:+258878798922" className="text-brand-electric font-semibold hover:underline">+258878798922</a>
                       </p>
                     </div>
                   </div>
@@ -2085,7 +2085,7 @@ export default function App() {
                         <strong>SIG Care Auto</strong><br />
                         Email: <a href="mailto:careauto@opssig.com" className="text-brand-electric font-semibold hover:underline">careauto@opssig.com</a><br />
                         Website: <a href="http://www.opssig.com" target="_blank" rel="noopener noreferrer" className="text-brand-electric font-semibold hover:underline">www.sigmz.com</a><br />
-                        Telefone: +258878798922
+                        Telefone: <a href="tel:+258878798922" className="text-brand-electric font-semibold hover:underline">+258878798922</a>
                       </p>
                     </div>
                   </div>
